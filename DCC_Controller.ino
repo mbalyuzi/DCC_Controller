@@ -48,6 +48,19 @@ void setup() {
 }
 
 
+ISR(TIMER2_COMPA_vect) {
+
+ // called every half bit cycle
+
+ static byte half_bit = 0;
+ half_bit = !half_bit;      // toggle half_bit
+
+ if (half_bit) {            // every other call
+   // if (getNextBit()) OCR2A = DCC_1_bit; else OCR2A = DCC_0_bit;
+ }  
+
+}
+
 void loop() {
  // put your main code here, to run repeatedly: 
 
