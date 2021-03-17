@@ -55,7 +55,7 @@ ISR(TIMER2_COMPA_vect) {
  half_bit = !half_bit;      // toggle half_bit
 
  if (half_bit) {            // every other call
-   // if (getNextBit()) OCR2A = DCC_1_bit; else OCR2A = DCC_0_bit;
+    if (getNextBit()) OCR2A = DCC_1_bit; else OCR2A = DCC_0_bit;
  }  
 
 }
@@ -68,6 +68,34 @@ struct packet {
   byte packets[9];
 };
 
+// getNextBit
+//
+// Returns the next DCC bit to be transmitted.
+// Built around a state machine that progresses through a given DCC packet
+
+byte getNextBit() {
+
+ static byte DCC_state = DCC_state_preamble;    // Current state
+ static byte preambleCount = DCC_preamble_min;  // Preamble bit counter
+
+ int nextBit;
+ 
+ switch (DCC_state) {
+
+   case DCC_state_preamble :
+     nextBit = 1;                             // preamble bits are '1's
+     preambleCount--;
+     if (!preambleCount) {                    // if this is the last bit (should also check for min inter-packet frequency here)
+       preambleCount = DCC_preamble_min;      // reset the count
+//       DCC_state = DCC_state_start;           // and move on to the start bit
+     }
+     break;
+
+ } //switch
+ 
+ return nextBit;  
+
+} // function
 
 void loop() {
  // put your main code here, to run repeatedly: 
