@@ -47,7 +47,6 @@ void setup() {
 
 }
 
-
 ISR(TIMER2_COMPA_vect) {
 
  // called every half bit cycle
@@ -60,6 +59,15 @@ ISR(TIMER2_COMPA_vect) {
  }  
 
 }
+
+// A DCC packet contains up to 10 bytes. Use a fixed length struct here for simplicity. We're going to be copying these out of
+// some sort of array of packets containing packets for each active locomotive.
+
+struct packet {
+  byte count;
+  byte packets[9];
+};
+
 
 void loop() {
  // put your main code here, to run repeatedly: 
