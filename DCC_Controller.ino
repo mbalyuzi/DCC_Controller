@@ -80,15 +80,20 @@ byte getNextBit() {
 
  int nextBit;
  
- switch (DCC_state) {
+ switch (DCC_state) {                         // State machine
 
    case DCC_state_preamble :
      nextBit = 1;                             // preamble bits are '1's
      preambleCount--;
      if (!preambleCount) {                    // if this is the last bit (should also check for min inter-packet frequency here)
        preambleCount = DCC_preamble_min;      // reset the count
-//       DCC_state = DCC_state_start;           // and move on to the start bit
+       DCC_state = DCC_state_start;           // and move on to the start bit
      }
+     break;
+
+   case DCC_state_start :                     // start bit is a '0'
+     nextBit = 0;
+//     DCC_state = DCC_state_data;              // and move straight on to the data
      break;
 
  } //switch
